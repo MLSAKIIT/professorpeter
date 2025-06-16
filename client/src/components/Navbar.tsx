@@ -3,93 +3,38 @@
 import React from 'react';
 
 const Navbar = () => {
-  const navbar = {
-    backgroundColor: '#1f2937',
-    color: 'white',
-    padding: '12px 16px'
-  };
-
-  const container = {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    maxWidth: '1200px',
-    margin: '0 auto'
-  };
-
-  const leftSection = {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '12px',
-    
-  };
-
-  const logo = {
-    width: '32px',
-    height: '32px',
-    backgroundColor: '#4b5563',
-    borderRadius: '50%',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center'
-  };
-
-  const logoS = {
-    width: '40px',
-    height: '30px',
-    borderRadius: '50%',
-  };
-
-  const title = {
-    fontSize: '18px',
-    fontWeight: '500',
-    margin: '0'
-  };
-
-  const rightSection = {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '24px'
-  };
-
-  const link = {
-    color: '#d1d5db',
-    textDecoration: 'none',
-    transition: 'color 0.2s ease-in-out'
-  };
-
-  const handleMouseEnter = (e) => {
-    e.target.style.color = 'white';
-  };
-
-  const handleMouseLeave = (e) => {
-    e.target.style.color = '#d1d5db';
-  };
-
   return (
-    <nav style={navbar}>
-      <div style={container}>
-        <div style={leftSection}>
-          <div style={logo}>
-            <img src="/logo.png" alt="Logo" style={logoS} />
+    <nav className="glass-card border-b border-gray-700/50 backdrop-blur-xl">
+      <div className="container mx-auto flex items-center justify-between max-w-6xl py-4 px-6">
+        <div className="flex items-center gap-4">
+          <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/25">
+            <img 
+              src="/logo.png" 
+              alt="Logo" 
+              className="w-12 h-9 rounded-xl object-cover"
+              onError={(e) => {
+                e.currentTarget.style.display = 'none';
+                e.currentTarget.nextElementSibling.style.display = 'flex';
+              }}
+            />
+            <span className="text-white text-xl font-bold hidden">🎓</span>
           </div>
-          <h1 style={title}>Prof. Peter's Students</h1>
+          <div>
+            <h1 className="text-xl font-bold text-white">Prof. Peter's Students</h1>
+            <p className="text-xs text-gray-400">AI Video Explainer</p>
+          </div>
         </div>
         
-        <div style={rightSection}>
+        <div className="flex items-center gap-8">
           <a 
             href="/about" 
-            style={link}
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
+            className="text-gray-300 hover:text-white transition-all duration-300 text-sm font-medium hover:scale-105 px-3 py-2 rounded-lg hover:bg-gray-800/50"
           >
             About
           </a>
           <a 
             href="/help" 
-            style={link}
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
+            className="text-gray-300 hover:text-white transition-all duration-300 text-sm font-medium hover:scale-105 px-3 py-2 rounded-lg hover:bg-gray-800/50"
           >
             Help
           </a>

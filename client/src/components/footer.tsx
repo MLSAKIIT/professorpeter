@@ -3,42 +3,57 @@
 import React from 'react';
 
 const Footer = () => {
-  const footer = {
-    backgroundColor: '#1f2937',
-    color: '#9ca3af',
-    padding: '32px 16px',
-    borderTop: '1px solid #374151'
-  };
-
-  const container= {
-    maxWidth: '1200px',
-    margin: '0 auto'
-  };
-
-  const title = {
-    color: '#f9fafb',
-    fontSize: '18px',
-    fontWeight: '600',
-    marginBottom: '16px'
-  };
-
-  const text = {
-    fontSize: '14px',
-    lineHeight: '1.6',
-    margin: '0'
-  };
-
   return (
-    <footer style={footer}>
-      <div style={container}>
-        <h3 style={title}>About</h3>
-        <p style={text}>
-          Lorem ipsum dolor sit amet, leo tristique arcu egestas ut a "template." Nunc bibendum eros. Consectetur ornare elit, 
-          sed leo ex facilisibus mauris posuere consectetur. Ultricised tempor dignissim ut tellus ut ut ultricies magna altera, 
-          Vehicula dictum tempor donec vitae velit. Neque eleifend arcu enim diam at faucibus. Maecenas imperdiet varius in 
-          neque dolore 🟡 amet, placerat ut velit colluban. Consectetur sed consectetur duis tellus ac febre ante velit quis nulla, 
-          leo in integer elit quam tristique viverra. Vel et pulbinar mauris, eget lobortis sed rhoncus leo mauris mauris.
-        </p>
+    <footer className="glass-card border-t border-gray-700/50 backdrop-blur-xl mt-16">
+      <div className="container mx-auto max-w-6xl py-12 px-6">
+        <div className="text-center mb-8">
+          <h3 className="text-white text-2xl font-bold mb-4 bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
+            About Prof. Peter's Students
+          </h3>
+        </div>
+        
+        <div className="grid md:grid-cols-3 gap-8 mb-8">
+          <div className="text-center">
+            <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-xl mx-auto mb-4 flex items-center justify-center">
+              <span className="text-2xl">🎬</span>
+            </div>
+            <h4 className="text-white font-semibold mb-2">AI-Powered</h4>
+            <p className="text-gray-400 text-sm">Advanced language models generate Peter Griffin-style explanations</p>
+          </div>
+          
+          <div className="text-center">
+            <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl mx-auto mb-4 flex items-center justify-center">
+              <span className="text-2xl">⚡</span>
+            </div>
+            <h4 className="text-white font-semibold mb-2">Instant Results</h4>
+            <p className="text-gray-400 text-sm">Generate educational videos in minutes, not hours</p>
+          </div>
+          
+          <div className="text-center">
+            <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-red-500 rounded-xl mx-auto mb-4 flex items-center justify-center">
+              <span className="text-2xl">🚀</span>
+            </div>
+            <h4 className="text-white font-semibold mb-2">Easy Sharing</h4>
+            <p className="text-gray-400 text-sm">Share your videos instantly with friends and colleagues</p>
+          </div>
+        </div>
+        
+        <div className="text-center border-t border-gray-700/50 pt-8">
+          <p className="text-gray-400 text-sm mb-4 max-w-2xl mx-auto leading-relaxed">
+            Experience the most unconventional educational platform on the internet. Transform complex topics into 
+            hilariously simple explanations with Peter Griffin's unique perspective.
+          </p>
+          <div className="flex justify-center items-center gap-4 mb-4">
+            <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></div>
+            <p className="text-blue-400 font-medium italic">
+              "Welcome to PeterTalks • Where prompts die and videos cry."
+            </p>
+            <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></div>
+          </div>
+          <p className="text-gray-500 text-xs">
+            © 2024 Prof. Peter's Students. All rights reserved.
+          </p>
+        </div>
       </div>
     </footer>
   );
