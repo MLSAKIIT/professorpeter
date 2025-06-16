@@ -12,6 +12,7 @@ from models import (
 )
 from config import settings
 from script import VideoScriptGenerator
+from video_compiler import overlay_image_on_video, merge_audio_with_video, burn_subtitles_on_video, transcript_txt_to_srt
 
 app = FastAPI(
     title="Educational Video Generator API",
@@ -191,9 +192,9 @@ async def generate_all(request: VideoRequest):
     return {"message": "Script, audio, and subtitles generated.", "script_file": "outputs/topic.json", "audio_file": "outputs/output.mp3", "subtitles_file": "outputs/subtitles.txt"}
 
 @app.post("/api/generate-video-full")
-async def generate_video_full(request: VideoRequest, template_id: int = Body(..., embed=True)):
+async def generate_video_full(request: VideoRequest, template_id: int = Body(..., embed=True), image_path: str = Body("peter.png", embed=True)):
     """
-    Generate script, audio, subtitles, and merge with selected video template.
+    Generate script, audio, subtitles, overlay Peter Griffin image, and burn subtitles onto the video template.
     """
     # 1. Generate script and save to outputs/topic.json
     generator = VideoScriptGenerator()
@@ -212,17 +213,23 @@ async def generate_video_full(request: VideoRequest, template_id: int = Body(...
     if not os.path.exists(template_path):
         raise HTTPException(status_code=404, detail=f"Template {template_id} not found.")
 
-    # 5. Merge audio with template using ffmpeg
-    output_video = "outputs/final_video.mp4"
-    ffmpeg_cmd = [
-        "ffmpeg", "-y",
-        "-i", template_path,
-        "-i", "outputs/output.mp3",
-        "-c:v", "copy", "-c:a", "aac", "-shortest", output_video
-    ]
-    subprocess.run(ffmpeg_cmd, check=True)
+    # 5. Overlay Peter Griffin image
+    overlayed = f"outputs/template{template_id}_with_peter.mp4"
+    overlay_image_on_video(template_path, image_path, overlayed, position="bottomright")
 
-    return {"message": "Video generated with template.", "video_file": output_video}
+    # 6. Merge audio with video
+    audio = "outputs/output.mp3"
+    final_video = "outputs/final_video.mp4"
+    merge_audio_with_video(overlayed, audio, final_video)
+
+    # 7. Convert transcript to SRT and burn subtitles
+    subtitles_txt = "outputs/subtitles.txt"
+    subtitles_srt = "outputs/subtitles.srt"
+    transcript_txt_to_srt(subtitles_txt, subtitles_srt)
+    final_video_with_subs = "outputs/final_video_with_subs.mp4"
+    burn_subtitles_on_video(final_video, subtitles_srt, final_video_with_subs)
+
+    return {"message": "Video generated with template, Peter Griffin image, and subtitles.", "video_file": final_video_with_subs}
 
 if __name__ == "__main__":
     uvicorn.run(
