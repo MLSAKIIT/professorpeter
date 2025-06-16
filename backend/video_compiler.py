@@ -1,6 +1,7 @@
 import subprocess
 import os
 from typing import Optional
+import re
 
 def overlay_image_on_video(template_path: str, image_path: str, output_path: str, position: str = "custom"):
     """
@@ -66,32 +67,26 @@ def merge_audio_with_video(video_path: str, audio_path: str, output_path: str):
 
 def burn_subtitles_on_video(video_path: str, subtitles_path: str, output_path: str, audio_path: Optional[str] = None):
     """
-    Burn subtitles (SRT) onto a video using ffmpeg. Uses absolute paths and explicit stream mapping to preserve audio. If subtitles are missing or invalid, copy video and audio as-is. Converts backslashes to forward slashes for ffmpeg compatibility on Windows.
+    Burn subtitles (SRT) onto a video using ffmpeg. Uses relative path for subtitles (with forward slashes) to match working PowerShell command. If subtitles are missing or invalid, copy video and audio as-is. Automatically validates and fixes the SRT file before burning.
     After burning, check if the output video has an audio stream. If not, and audio_path is provided, re-merge the audio.
     """
     import os
     import subprocess
     import json
-    subtitles_path = os.path.abspath(subtitles_path)
+    # Validate and fix SRT before burning
+    validate_and_fix_srt(subtitles_path)
+    # Compute relative path from cwd (project root) to subtitles_path
+    cwd = r"c:/professorpeter"
+    rel_subtitles_path = os.path.relpath(subtitles_path, cwd)
+    subtitles_path_ffmpeg = rel_subtitles_path.replace('\\', '/')
+    # Use absolute paths for video and output, but relative for subtitles
     video_path = os.path.abspath(video_path)
     output_path = os.path.abspath(output_path)
-    # ffmpeg on Windows requires forward slashes in filter paths
-    subtitles_path_ffmpeg = subtitles_path.replace(os.sep, '/')
-    # If subtitles file does not exist or is empty, just copy video and audio
-    if not os.path.exists(subtitles_path) or os.path.getsize(subtitles_path) == 0:
-        ffmpeg_cmd = [
-            "ffmpeg", "-y",
-            "-i", video_path,
-            "-c:v", "copy", "-c:a", "copy", "-shortest",
-            output_path
-        ]
-        subprocess.run(ffmpeg_cmd, check=True)
-        return
-    # Otherwise, burn subtitles and preserve audio
+    filter_arg = f'subtitles={subtitles_path_ffmpeg}:charenc=UTF-8'
     ffmpeg_cmd = [
         "ffmpeg", "-y",
         "-i", video_path,
-        "-vf", f"subtitles={subtitles_path_ffmpeg}",
+        "-vf", filter_arg,
         "-map", "0:v:0",
         "-map", "0:a:0",
         "-c:v", "libx264",
@@ -99,7 +94,7 @@ def burn_subtitles_on_video(video_path: str, subtitles_path: str, output_path: s
         "-shortest",
         output_path
     ]
-    subprocess.run(ffmpeg_cmd, check=True)
+    subprocess.run(ffmpeg_cmd, check=True, cwd=cwd)
 
     # Check if output video has audio stream
     probe_cmd = [
@@ -162,19 +157,95 @@ def transcript_txt_to_srt(txt_path: str, srt_path: str, duration_per_line: float
                 f.write(f"{wrapped}\n")
             f.write("\n")
 
+def validate_and_fix_srt(srt_path: str):
+    """
+    Validates and fixes an SRT file for ffmpeg compatibility:
+    - Ensures correct numbering
+    - Ensures timestamps are in 00:00:00,000 format with commas
+    - Ensures blank lines between blocks
+    - Removes empty or malformed blocks
+    - Wraps lines to max 40 chars
+    """
+    import textwrap
+    with open(srt_path, 'r', encoding='utf-8') as f:
+        content = f.read()
+    # Split into blocks by double newlines
+    blocks = re.split(r'\n{2,}', content.strip())
+    fixed_blocks = []
+    idx = 1
+    for block in blocks:
+        lines = block.strip().splitlines()
+        if len(lines) < 2:
+            continue
+        # Fix numbering
+        number = str(idx)
+        # Fix timestamp line
+        ts_line = lines[1] if len(lines) > 1 else ''
+        ts_line = re.sub(r'(\d{2}:\d{2}:\d{2})[.,](\d{3})', r'\1,\2', ts_line)
+        # Validate timestamp
+        if not re.match(r'\d{2}:\d{2}:\d{2},\d{3} --> \d{2}:\d{2}:\d{2},\d{3}', ts_line):
+            continue
+        # Wrap text lines
+        text_lines = []
+        for l in lines[2:]:
+            text_lines.extend(textwrap.wrap(l, width=40))
+        if not text_lines:
+            continue
+        fixed_block = f"{number}\n{ts_line}\n" + "\n".join(text_lines)
+        fixed_blocks.append(fixed_block)
+        idx += 1
+    # Write back as UTF-8 without BOM
+    with open(srt_path, 'w', encoding='utf-8') as f:
+        # Remove BOM if present
+        content_to_write = "\n\n".join(fixed_blocks) + "\n"
+        if content_to_write.startswith('\ufeff'):
+            content_to_write = content_to_write.lstrip('\ufeff')
+        f.write(content_to_write)
+
+def generate_video_with_subtitles(template_path: str, image_path: str, audio_path: str, subtitles_txt_path: str, output_path: str):
+    """
+    Full pipeline: overlay Peter Griffin, merge audio, generate SRT, burn subtitles, output to final_video.mp4.
+    """
+    import os
+    from .video_compiler import overlay_image_on_video, merge_audio_with_video, transcript_txt_to_srt, burn_subtitles_on_video
+    temp_overlay = output_path.replace('.mp4', '_overlay.mp4')
+    temp_audio = output_path.replace('.mp4', '_audio.mp4')
+    temp_srt = subtitles_txt_path.replace('.txt', '.srt')
+
+    overlay_image_on_video(template_path, image_path, temp_overlay)
+    merge_audio_with_video(temp_overlay, audio_path, temp_audio)
+    transcript_txt_to_srt(subtitles_txt_path, temp_srt)
+    # Burn subtitles directly into final_video.mp4
+    burn_subtitles_on_video(temp_audio, temp_srt, output_path, audio_path=audio_path)
+    # Clean up temp files if desired
+    # for f in [temp_overlay, temp_audio, temp_srt]:
+    #     if os.path.exists(f):
+    #         os.remove(f)
+
 if __name__ == "__main__":
-    # Example usage
-    template = "templates/template1.mp4"
-    image = "peter.png"
-    overlayed = "outputs/template1_with_peter.mp4"
-    audio = "outputs/output.mp3"
-    subtitles_txt = "outputs/subtitles.txt"
-    subtitles_srt = "outputs/subtitles.srt"
-    final_video = "outputs/final_video.mp4"
-    final_video_with_subs = "outputs/final_video_with_subs.mp4"
+    # Use correct paths relative to the backend directory
+    template = "backend/templates/template1.mp4"
+    image = "backend/templates/peter.png"
+    overlayed = "backend/outputs/template1_with_peter.mp4"
+    audio = "backend/outputs/output.mp3"
+    subtitles_txt = "backend/outputs/subtitles.txt"
+    subtitles_srt = "backend/outputs/subtitles.srt"
+    final_video = "backend/outputs/final_video.mp4"
+    final_video_with_subs = "backend/outputs/final_video_with_subs.mp4"
 
     overlay_image_on_video(template, image, overlayed, position="middle")
     merge_audio_with_video(overlayed, audio, final_video)
     transcript_txt_to_srt(subtitles_txt, subtitles_srt)
     burn_subtitles_on_video(final_video, subtitles_srt, final_video_with_subs)
     print(f"✅ Final video with subtitles saved as {final_video_with_subs}")
+
+    # Remove all other files in outputs except final_video_with_subs.mp4
+    import os
+    outputs_dir = os.path.dirname(final_video_with_subs)
+    for fname in os.listdir(outputs_dir):
+        fpath = os.path.join(outputs_dir, fname)
+        if fpath != final_video_with_subs and os.path.isfile(fpath):
+            try:
+                os.remove(fpath)
+            except Exception as e:
+                print(f"Warning: Could not delete {fpath}: {e}")

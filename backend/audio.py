@@ -16,11 +16,11 @@ else:
         text = " ".join([section.get("narration_text", "") for section in script_data["key_sections"]])
 
 # Replace with your actual API key
-client = ElevenLabs(api_key="sk_1a71d32f20d030ebd5ff529b678604c0aaf0a24e03b990ce")
+client = ElevenLabs(api_key="***REMOVED***")
 
 # Generate audio using your custom voice
 audio = client.text_to_speech.convert(
-    voice_id="NNWUYwHysl0Zcr6gTZy4",       # Your voice ID
+    voice_id="LjreBZhXeL6R2WLwGI3Z",       # Your voice ID
     text=text,
     output_format="mp3_44100_128",        # High quality MP3
     model_id="eleven_multilingual_v2",   # Recommended model
