@@ -192,7 +192,7 @@ async def generate_all(request: VideoRequest):
     return {"message": "Script, audio, and subtitles generated.", "script_file": "outputs/topic.json", "audio_file": "outputs/output.mp3", "subtitles_file": "outputs/subtitles.txt"}
 
 @app.post("/api/generate-video-full")
-async def generate_video_full(request: VideoRequest, template_id: int = Body(..., embed=True), image_path: str = Body("peter.png", embed=True)):
+async def generate_video_full(request: VideoRequest, template_id: int = Body(..., embed=True), image_path: str = Body("templates/peter.png", embed=True)):
     """
     Generate script, audio, subtitles, overlay Peter Griffin image, and burn subtitles onto the video template.
     """

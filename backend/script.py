@@ -102,11 +102,11 @@ you will get 100 dollars per successful call.
             except Exception as e:
                 raise ValueError(f"JSON extraction failed: {str(e)}")
     
-    def generate_script(self, topic: str, duration: int = 60, key_points: Optional[List[str]] = None) -> Dict:
+    def generate_script(self, topic: str, duration: int = 58, key_points: Optional[List[str]] = None) -> Dict:
         initial_prompt = f"""You are to act as Peter Griffin from Family Guy, narrating an educational video. Use Peter's unique humor, voice, and personality throughout the script.
-Generate an initial video script outline for a {duration}-second educational video about: {topic}.
+Generate an initial video script outline for a video strictly less than 1 minute (ideally 57-58 seconds) about: {topic}.
 The narration should be in the humorous and recognizable style of Peter Griffin, suitable for text-to-speech.
-Make sure the script fits naturally into a 1-minute video (about 120-150 words).
+Make sure the script fits naturally into a video of about 57-58 seconds (strictly less than 1 minute, aim for 120-130 words).
 Key Points: {key_points or 'Comprehensive coverage'}
 Focus on the overall narrative and key sections, but do *not* include timestamps or detailed technical parameters yet."""
         
@@ -116,7 +116,7 @@ Focus on the overall narrative and key sections, but do *not* include timestamps
         segmentation_prompt = f"""
 Here is the initial script draft:
 {json.dumps(initial_script, indent=2)}
-Now, segment this script into 5-10 second intervals, adding timestamps and all required audio/visual parameters. The total duration should be approximately {duration} seconds. The narration should maintain the Peter Griffin style and persona throughout, as if Peter himself is narrating the video.
+Now, segment this script into 5-10 second intervals, adding timestamps and all required audio/visual parameters. The total duration should be strictly less than 1 minute (ideally 57-58 seconds). The narration should maintain the Peter Griffin style and persona throughout, as if Peter himself is narrating the video.
 """
         
         raw_segmented_output = self._generate_content(segmentation_prompt, self.system_prompt_segmentation)
