@@ -41,7 +41,7 @@ FRONTEND_URL=http://localhost:3000
 ### 3. Start the Server
 
 ```bash
-python start.py
+uv run start.py
 ```
 
 The API will be available at:

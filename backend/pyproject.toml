@@ -16,6 +16,8 @@ dependencies = [
     "assemblyai>=0.15.0",
     "aiofiles>=23.2.0",
     "Pillow>=10.0.0",
+    "pydub>=0.25.1",
+    "ffmpeg>=1.4",
 ]
 
 [build-system]

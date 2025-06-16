@@ -76,8 +76,8 @@ def burn_subtitles_on_video(video_path: str, subtitles_path: str, output_path: s
     import subprocess
     import json    # Validate and fix SRT before burning
     validate_and_fix_srt(subtitles_path)
-    # Compute relative path from cwd (project root) to subtitles_path
-    cwd = r"c:/professorpeter"
+    # Use current working directory instead of hardcoded path
+    cwd = os.getcwd()
     rel_subtitles_path = os.path.relpath(subtitles_path, cwd)
     subtitles_path_ffmpeg = rel_subtitles_path.replace('\\', '/')    # Place subtitles at the center of video screen using simple, reliable styling
     # Using basic subtitle filter without complex force_style that might fail
