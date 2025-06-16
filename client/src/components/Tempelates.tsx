@@ -1,7 +1,6 @@
 import { cn } from '@/lib/utils'
 import React from 'react'
 import DecryptedText from './ui/DecryptedText'
-import CardModal from './ui/CardModal'
 
 const Tempelates = () => {
   return (
@@ -25,7 +24,6 @@ const Tempelates = () => {
         </h1>
       </div>
       <div>
-        <CardModal />
       </div>
     </div>
   )

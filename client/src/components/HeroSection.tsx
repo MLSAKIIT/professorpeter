@@ -60,8 +60,8 @@ export function HeroSection() {
         </Button>
       </section>
     </div>
-    <div id="next-section" className="h-screen w-full  bg-black/[0.96] text-white bg-grid-white/[0.02]">
-        <Tempelates />
+    <div id="next-section" className=" bg-black/[0.96] text-white bg-grid-white/[0.02]">
+        
     </div>
     </>
   );

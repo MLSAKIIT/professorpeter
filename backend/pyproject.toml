@@ -10,6 +10,12 @@ dependencies = [
     "pydantic>=2.5.0",
     "python-multipart>=0.0.6",
     "python-dotenv>=1.0.0",
+    "httpx>=0.28.1",
+    "google-generativeai>=0.8.5",
+    "elevenlabs>=1.0.0",
+    "assemblyai>=0.15.0",
+    "aiofiles>=23.2.0",
+    "Pillow>=10.0.0",
 ]
 
 [build-system]
@@ -18,3 +24,6 @@ build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
 packages = ["."]
+
+[tool.hatch.metadata]
+allow-direct-references = true
