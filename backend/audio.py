@@ -1,6 +1,10 @@
 import json
 from elevenlabs.client import ElevenLabs
 import os
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 # Load script from topic.json
 with open("outputs/topic.json", "r", encoding="utf-8") as f:
@@ -15,8 +19,12 @@ else:
     if not text and "key_sections" in script_data:
         text = " ".join([section.get("narration_text", "") for section in script_data["key_sections"]])
 
-# Replace with your actual API key
-client = ElevenLabs(api_key="***REMOVED***")
+# Get API key from environment variable
+api_key = os.getenv("TTS_API_KEY") or os.getenv("ELEVENLABS_API_KEY")
+if not api_key:
+    raise ValueError("TTS_API_KEY or ELEVENLABS_API_KEY environment variable not set")
+
+client = ElevenLabs(api_key=api_key)
 
 # Generate audio using your custom voice
 audio = client.text_to_speech.convert(

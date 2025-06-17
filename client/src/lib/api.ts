@@ -120,6 +120,11 @@ class ApiService {
 
 export const apiService = new ApiService();
 
+// Get download URL for a video
+export const getVideoDownloadUrl = (videoId: string): string => {
+  return `${API_BASE_URL}/api/video/${videoId}/download`;
+};
+
 // Enhanced video generation function that tries backend first, falls back to mock
 export const generateVideoWithBackend = async (prompt: string, templateId?: number): Promise<GeneratedVideo> => {
   try {

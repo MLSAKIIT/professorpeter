@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight, Copy, Share2, Wifi, WifiOff } from 'lucide-react';
 import TemplateSelector from './TemplateSelector';
 import VideoResult from './VideoResult';
-import { generateVideoWithBackend, getBackendStatus, checkVideoStatus } from '@/lib/api';
+import { generateVideoWithBackend, getBackendStatus, checkVideoStatus, getVideoDownloadUrl } from '@/lib/api';
 import { HeroSection } from './HeroSection';
 import { cn } from '@/lib/utils';
 
@@ -44,7 +44,7 @@ const VideoGenerator = () => {
             setGeneratedVideo(prev => prev ? {
               ...prev,
               status: 'completed',
-              videoUrl: `/api/video/${prev.id}/download`
+              videoUrl: getVideoDownloadUrl(prev.id)
             } : null);
           } else if (status.status === 'failed') {
             setGeneratedVideo(prev => prev ? {
