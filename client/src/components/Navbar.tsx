@@ -22,7 +22,7 @@ export function NavbarDemo() {
         {/* Desktop Navigation */}
         <NavBody>
           <NavbarLogo />
-          <h1 className="z-10 text-white">Professor Peter's Student</h1>
+          <h1 className="z-10 text-white">Professor Peter</h1>
           <div className="flex items-center gap-4">
             <NavbarButton variant="primary">About</NavbarButton>
             <NavbarButton variant="primary">Help</NavbarButton>

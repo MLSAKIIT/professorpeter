@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# Professor Peter's Students - Development Startup Script
+# Professor Peter - Development Startup Script
 # This script starts both the backend and frontend in development mode
 
-echo "🚀 Starting Professor Peter's Students Development Environment..."
+echo "🚀 Starting Professor Peter Development Environment..."
 echo ""
 
 # Function to kill background processes on script exit

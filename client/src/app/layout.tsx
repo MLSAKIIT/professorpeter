@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Prof. Peter's Students - Video Explainer on Demand",
+  title: "Professor Peter - Video Explainer on Demand",
   description: "Meet Peter — your video explainer on demand! Generate educational videos with Peter Griffin's unique style.",
 };
 
