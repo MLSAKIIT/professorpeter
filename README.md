@@ -1,4 +1,9 @@
-# Professor Peter 🎓🎬
+<p align="center">
+  <a href="" rel="noopener">
+ <img width=250px height=250px src="backend/assets/peter_griffin.png" alt="professorpeter"></a>
+</p>
+
+<h1 align="center">Professor Peter 🎓🎬</h1>
 
 > *"Hey Lois, remember when I became an AI-powered educational content creator? Nyehehehe!"*
 
