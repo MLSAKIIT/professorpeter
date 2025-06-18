@@ -121,6 +121,41 @@ The backend works without API keys for development:
 - **Script Generation**: Returns mock Peter Griffin responses
 - **Status Simulation**: Simulates video generation progress
 - **File Serving**: Serves static content from outputs directory
+  
+## 🎞 FFmpeg Installation & Setup
+
+FFmpeg is required to process and merge audio and video.
+
+### 🪟 Windows
+
+1. Download FFmpeg from [https://ffmpeg.org/download.html](https://ffmpeg.org/download.html)  
+   (or directly from [gyan.dev builds](https://www.gyan.dev/ffmpeg/builds/))
+2. Extract the ZIP to a folder like `C:\ffmpeg`
+3. Add `C:\ffmpeg\bin` to your system `PATH`:
+   - Open *System Properties → Environment Variables*
+   - Under *System Variables*, find `Path`, click *Edit*, and add:  
+     `C:\ffmpeg\bin`
+4. Verify installation:
+   ```bash
+   ffmpeg -version
+   ```
+
+### 🐧 Linux (Ubuntu/Debian)
+
+```bash
+sudo apt update
+sudo apt install ffmpeg
+ffmpeg -version
+```
+
+### 🍎 macOS (Homebrew)
+
+```bash
+brew install ffmpeg
+ffmpeg -version
+```
+
+> ✅ Ensure `ffmpeg` is accessible in your system PATH for video generation to work properly.
 
 ## 🔑 Getting API Keys
 
